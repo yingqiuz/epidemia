@@ -1,0 +1,20 @@
+language: python
+sudo: false
+python:
+  - "3.5"
+  - "3.6"
+  - "3.7-dev"  # 3.7 development branch
+# command to install dependencies
+install:
+  - pip install -r requirements.txt
+  - pip install coveralls
+  - pip install flake8
+# command to run tests
+script:
+  - pytest
+  # * E501 - line length limit
+  # * E123 - indentation on data structures
+  # * W504 - line break after binary operator
+  - flake8 . --ignore=E402,E501,W504 --exclude=docs,build
+after_success:
+  - coveralls
