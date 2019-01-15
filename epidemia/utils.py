@@ -22,15 +22,16 @@ def transmission_process_region(
 
 
 def spread_process(
-        region, edge, edge_to_region_weights, region_to_edge_weights, v, dt):
+        region, edge, edge_to_region_weights, region_to_edge_weights, v, dt
+):
     """conduct the spreading process"""
     # region to edge
     region_to_edge = np.fill_diagonal(region * region_to_edge_weights * dt, 0)
     edge_to_region = edge * edge_to_region_weights * v * dt
 
     # update the population
-    region = region - region_to_edge.sum(axis = 1) + \
-             edge_to_region.sum(axis = 0)
+    region = region - region_to_edge.sum(axis=1) + \
+             edge_to_region.sum(axis=0)
 
     edge = edge - edge_to_region + region_to_edge
 

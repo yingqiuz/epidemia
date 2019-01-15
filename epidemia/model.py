@@ -27,6 +27,7 @@ class AgentBasedModel:
         # binarized dist and weights matrix
         self.adj_dist = self.dist * self.adj
         self.adj_weights = self.dist * self.adj
+        self.spread_weights = self.adj_weights / self.adj_weights.sum(axis=1)
 
         # region_size
         self.region_size = np.array(region_size)
@@ -64,23 +65,42 @@ class AgentBasedModel:
         self.agent_groups[name] = NewAgentGroup
 
     def add_growth_process(self, name, growth_rate=0.5):
-        self.growth_process[name] = growth_rate
+        self.agent_groups[name].growth_rate = growth_rate
 
     def add_clearance_process(self, name, clearance_rate=0.5):
-        self.clearance_process[name] = clearance_rate
+        self.agent_groups[name].clearance_rate = clearance_rate
 
     def add_transmission_process(self, name, trans_rate=1):
-        self.trans_process[name] = trans_rate
+        self.agent_groups[name].trans_rate = trans_rate
 
-    def add_spread_process(self, name, weights=None, dist=None, v=1):
-        if weights is None:
-            self.spread_process[name] = self.weights
+    def add_spread_process(self, name, prob_stay=0.5, v=1):
+        self.agent_groups[name].region_to_edge_weights = np.fill_diagonal(
+            self.spread_weights * (1 - prob_stay), prob_stay
+        )
+        # set up rates from region to edge and from edge to region
+        self.agent_groups[name].edge_to_region_weights = np.zeros(self.adj.shape)
+        self.agent_groups[name].edge_to_region_weights[self.adj_dist != 0] = 1 / self.adj_dist
 
-    def growth(self, agent_groups=None, growth_t=100000000):
-        if agent_groups is None:
-            agent_groups = [agent_group for agent_group in self.agent_groups]
+    def grow(self, growth_t=100000000, record_to_history=False):
 
         # begin the growth prcoess
         for t in tqdm(range(growth_t)):
-            for agent_group_name in agent_groups:
-                self.agent_groups[agent_group_name].region_s =
+            for agent_group in self.agent_groups:
+                agent_group.region_growth_step()
+                agent_group.region_clearance_step()
+                agent_group.spread_step()
+
+                if not record_to_history:
+                    agent_group.record_to_history()
+
+            if False not in [agent_group.growth_stop() for agent_group in self.agent_groups]:
+                return
+
+        return
+
+    def infection(self, agent_groups=None, t=10000, record_to_history=False):
+        for t in tqdm(range(t)):
+            for agent_group in self.agent_groups:
+                agent_group.region_growth
+
+
