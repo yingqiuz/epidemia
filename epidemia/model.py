@@ -32,8 +32,17 @@ class AgentBasedModel:
 	"""
 
     # constructor
-    def __init__(self, v=1, N_regions=42, dt=0.01, sconn_len=None, sconn_den=None, snca=None, gba=None, roi_size=None,
-                 fconn=None, fcscale=None):
+    def __init__(self, v=1,
+                 N_regions=42,
+                 dt=0.01,
+                 dist=None,
+                 weight=None,
+                 growth_rate=None,
+                 clearance_rate=None,
+                 region_size=None,
+                 fconn=None,
+                 fcscale=None
+                 ):
 
         # number of regions
         self.N_regions = N_regions
@@ -89,7 +98,7 @@ class AgentBasedModel:
 
         self.synthesis_control = np.int_(roi_size.flatten())
 
-    def normal_alpha_syn_growth_region(self):
+    def normal_growth_region(self):
         """step: normal alpha-syn synthesized and cleared in regions"""
 
         self.nor -= np.array([np.sum(np.random.uniform(0, 1, (v,)) < k)
@@ -100,7 +109,7 @@ class AgentBasedModel:
                               for k, v in zip(self.synthesis_rate, self.synthesis_control)])
         # or self.roi_size)])
 
-    def normal_alpha_syn_growth_edge_discrete(self):
+    def normal_growth_edge_discrete(self):
         """proteins are moving discretely in edges"""
         # alpha syn  -- from region to path
         # exit region
@@ -120,7 +129,7 @@ class AgentBasedModel:
         # update regions
         self.nor = exit_process[np.nonzero(np.eye(self.N_regions))] + np.sum(enter_process, axis=0)
 
-    def normal_alpha_syn_growth_edge(self):
+    def normal_growth_edge(self):
         """proteins are moving contiously in edges"""
 
         # exit regions:
@@ -146,7 +155,7 @@ class AgentBasedModel:
         self.mis[seed] = initial_number
         # print('inject %d misfolded alpha-syn into region %d' % (initial_number, seed))
 
-    def misfolded_alpha_syn_spread_edge_discrete(self):
+    def misfolded_spread_edge_discrete(self):
         """ step in paths for normal and misfolded alpha syn"""
 
         ############## misfolded alpha synuclein ###########
@@ -182,7 +191,7 @@ class AgentBasedModel:
         # update regions
         self.nor = exit_process[np.nonzero(np.eye(self.N_regions))] + np.sum(enter_process, axis=0)
 
-    def misfolded_alpha_syn_spread_edge(self):
+    def misfolded_spread_edge(self):
         """proteins are moving continously"""
         ##### misfolded alpha synuclein #####
         exit_process = np.array([np.random.multinomial(v, self.weights_euler[k])
@@ -215,7 +224,7 @@ class AgentBasedModel:
         self.path_nor_cont += (exit_process - enter_process)
         self.nor += (np.sum(enter_process, axis=0) - np.sum(exit_process, axis=1))
 
-    def misfolded_alpha_syn_spread_region(self, trans_rate=1):
+    def misfolded_spread_region(self, trans_rate=1):
         """clearance and synthesis of normal/misfolded alpha-syn/ transsmssion process in regions"""
         ## clearance
         cleared_nor = np.array([np.sum(np.random.uniform(0, 1, (v,)) < k)
@@ -282,7 +291,7 @@ class SIR_model:
     """An SIR model to simulate the spread of alpha-syn"""
 
     # constructor
-    def __init__(self, v=1, N_regions=42, dt=0.01, sconn_len=None, sconn_den=None, snca=None, gba=None, roi_size=None,
+    def __init__(self, v=1, N_regions=42, dt=0.01, sconn_len=None, sconn_den=None, growth_rate=None, clearance_rate=None, region_size=None,
                  fconn=None, fcscale=None):
         # number of regions
         self.N_regions = N_regions
@@ -316,11 +325,11 @@ class SIR_model:
         # region size
         self.roi_size = roi_size.flatten()
 
-    def normal_alpha_syn_growth_region(self):
+    def normal_growth_region(self):
         """normal alpha-syn growing"""
         self.nor += (self.roi_size * self.synthesis_rate - self.nor * self.clearance_rate)
 
-    def normal_alpha_syn_growth_edge(self):
+    def normal_growth_edge(self):
         # enter paths
         enter_process = self.nor.reshape(self.N_regions, 1) * self.weights * self.dt
         enter_process[np.eye(self.N_regions) == 1] = 0  # remove diag
@@ -338,7 +347,7 @@ class SIR_model:
         self.mis[seed] = initial_number
         # print('inject %d misfolded alpha-syn into region %d' % (initial_number, seed))
 
-    def misfolded_alpha_syn_spread_edge(self):
+    def misfolded_spread_edge(self):
         ##### misfolded alpha-syn
         # enter paths
         enter_process = self.mis.reshape(self.N_regions, 1) * self.weights * self.dt
@@ -363,7 +372,7 @@ class SIR_model:
         self.nor += (np.sum(exit_process, axis=0) - np.sum(enter_process, axis=1))
         self.path_nor += (enter_process - exit_process)
 
-    def misfolded_alpha_syn_spread_region(self, trans_rate=1):
+    def misfolded_spread_region(self, trans_rate=1):
         '"""the transmission process inside regions"""'
 
         prob_get_infected = 1 - np.exp(-self.mis * trans_rate * self.dt / self.roi_size)
@@ -394,7 +403,7 @@ class PopulationModel:
     """An SIR model to simulate the spread of alpha-syn"""
 
     # constructor
-    def __init__(self, v=1, N_regions=42, dt=0.01, sconn_len=None, sconn_den=None, snca=None, gba=None, roi_size=None,
+    def __init__(self, v=1, N_regions=42, dt=0.01, sconn_len=None, sconn_den=None, growth_rate=None, clearance_rate=None, region_size=None,
                  fconn=None, fcscale=None):
         # number of regions
         self.N_regions = N_regions
@@ -428,11 +437,11 @@ class PopulationModel:
         # region size
         self.roi_size = roi_size.flatten()
 
-    def normal_alpha_syn_growth_region(self):
+    def normal_growth_region(self):
         """normal alpha-syn growing"""
         self.nor += (self.roi_size * self.synthesis_rate - self.nor * self.clearance_rate)
 
-    def normal_alpha_syn_growth_edge(self):
+    def normal_growth_edge(self):
         # enter paths
         enter_process = self.nor.reshape(self.N_regions, 1) * self.weights * self.dt
         enter_process[np.eye(self.N_regions) == 1] = 0  # remove diag
@@ -450,7 +459,7 @@ class PopulationModel:
         self.mis[seed] = initial_number
         # print('inject %d misfolded alpha-syn into region %d' % (initial_number, seed))
 
-    def misfolded_alpha_syn_spread_edge(self):
+    def misfolded_spread_edge(self):
         ##### misfolded alpha-syn
         # enter paths
         enter_process = self.mis.reshape(self.N_regions, 1) * self.weights * self.dt
@@ -475,7 +484,7 @@ class PopulationModel:
         self.nor += (np.sum(exit_process, axis=0) - np.sum(enter_process, axis=1))
         self.path_nor += (enter_process - exit_process)
 
-    def misfolded_alpha_syn_spread_region(self, trans_rate=1):
+    def misfolded_spread_region(self, trans_rate=1):
         '"""the transmission process inside regions"""'
 
         prob_get_infected = 1 - np.exp(-self.mis * trans_rate * self.dt / self.roi_size)

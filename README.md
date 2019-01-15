@@ -1,21 +1,21 @@
-# ab-epidemia
-Python based PD_models to predict alpha-syn spread in Parkinson's Disease
+# Epidemia
+Python based toolbox to agent-based or metapopulation epidemic modelling
 
 ## Usage
-Class `agent_based_model` simulates the interactions and mobility patterns of alpha-syn individually (slow)
+Class `AgentBasedModel` simulates the interactions and mobility patterns of agents individually
 ```python
 import numpy as np
 from epidemia import AgentBasedModel
 
 # set T for the growth of normal alpha-syn
 T = 20000
-ref_model = AgentBasedModel(v=1 , N_regions=42, dt=0.01, sconn_len=sconn_len, sconn_den=sconn_den, snca=snca, gba=gba, roi_size=roi_size, fconn=np.zeros((42, 42)), fcscale=0)
+ref_model = AgentBasedModel(v=1 , N_regions=42, dt=0.01, dist=dist, weight=weight, growth=growth, clearance=clearance, region_size=region_size, fconn=np.zeros((42, 42)), fcscale=0)
 
 # start the process of normal alpha-syn growth
 for t in range(T):
     ref_model.record_to_history()
-    ref_model.normal_alpha_syn_growth_edge()
-    ref_model.normal_alpha_syn_growth_region()
+    ref_model.normal_growth_edge()
+    ref_model.normal_growth_region()
 
 print(ref_model.nor)
 
@@ -30,20 +30,20 @@ for t in range(T_spread):
 print(ref_model.mis)   
 ```
 
-Class `SIR_model` simulates the system based on the differential equations... See [SIR_stimulator_Euler](https://github.com/yingqiuz/SIR_stimulator_Euler) for a matlab implementation
+Class `PopulationModel` is a much faster implementation, modelling each subgroup as a population.
 ```python
 import numpy as np
 from epidemia import PopulationModel
 
 # set T for the growth of normal alpha-syn
 T = 10000
-ref_model = PopulationModel(v=1 , N_regions=42, dt=0.01, sconn_len=sconn_len, sconn_den=sconn_den, snca=snca, gba=gba, roi_size=roi_size, fconn=np.zeros((42, 42)), fcscale=0)
+ref_model = PopulationModel(v=1 , N_regions=42, dt=0.01, dist=dist, weight=weight, growth_rate=growth_rate, clearance_rate=clearance_rate, region_size=region_size, fconn=np.zeros((42, 42)), fcscale=0)
 
 # start the process of normal alpha-syn growth
 for t in range(T):
     ref_model.record_to_history()
-    ref_model.normal_alpha_syn_growth_edge()
-    ref_model.normal_alpha_syn_growth_region()
+    ref_model.normal_growth_edge()
+    ref_model.normal_growth_region()
 
 print(ref_model.nor)
 
@@ -53,8 +53,8 @@ T_spread = 20000
 
 for t in range(T_spread):
     ref_model.record_to_history()
-    ref_model.misfolded_alpha_syn_spread_edge()
-    ref_model.misfolded_alpha_syn_spread_region()
+    ref_model.misfolded_spread_edge()
+    ref_model.misfolded_spread_region()
 
 print(ref_model.mis)
 ```
