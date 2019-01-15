@@ -33,11 +33,11 @@ print(ref_model.mis)
 Class `SIR_model` simulates the system based on the differential equations... See [SIR_stimulator_Euler](https://github.com/yingqiuz/SIR_stimulator_Euler) for a matlab implementation
 ```python
 import numpy as np
-from PD_models import SIR_model
+from epidemia import PopulationModel
 
 # set T for the growth of normal alpha-syn
 T = 10000
-ref_model = SIR_model(v=1 , N_regions=42, dt=0.01, sconn_len=sconn_len, sconn_den=sconn_den, snca=snca, gba=gba, roi_size=roi_size, fconn=np.zeros((42, 42)), fcscale=0)
+ref_model = PopulationModel(v=1 , N_regions=42, dt=0.01, sconn_len=sconn_len, sconn_den=sconn_den, snca=snca, gba=gba, roi_size=roi_size, fconn=np.zeros((42, 42)), fcscale=0)
 
 # start the process of normal alpha-syn growth
 for t in range(T):
