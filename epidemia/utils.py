@@ -31,10 +31,8 @@ def spread_process(
 
     # update the population
     region = region - region_to_edge.sum(axis=1) + \
-             edge_to_region.sum(axis=0)
+        edge_to_region.sum(axis=0)
 
     edge = edge - edge_to_region + region_to_edge
 
     return region, edge
-
-def interaction():
