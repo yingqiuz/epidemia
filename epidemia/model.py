@@ -4,10 +4,10 @@ basic classes and infrastructure
 """
 import numpy as np
 import tqdm
-from .agent import AgentGroup
-from .utils import (
-    growth_process_region, clearance_process_region, transmission_process_region, spread_process
-)
+from .SI import SIAgents
+from .SIR import SIRAgents
+from .SIRS import SIRSAgents
+from .SIS import SISAgents
 
 
 class AgentBasedModel:
@@ -48,3 +48,25 @@ class AgentBasedModel:
         self.spread_process = dict()
 
         self.dt = dt
+
+    def add_agents(self, group_name, epidemic_type):
+        if epidemic_type == 'SI':
+            self.agent_groups[group_name] = SIAgents(
+                self.adj, self.dist, self.weights,
+                self.region_size, dt=0.01
+            )
+        if epidemic_type == 'SIR':
+            self.agent_groups[group_name] = SIRAgents(
+                self.adj, self.dist, self.weights,
+                self.region_size, dt=0.01
+            )
+        if epidemic_type == 'SIS':
+            self.agent_groups[group_name] = SISAgents(
+                self.adj, self.dist, self.weights,
+                self.region_size, dt=0.01
+            )
+        if epidemic_type == 'SIRS':
+            self.agent_groups[group_name] = SIRSAgents(
+                self.adj, self.dist, self.weights,
+                self.region_size, dt=0.01
+            )

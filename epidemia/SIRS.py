@@ -9,7 +9,7 @@ from .utils import (
 )
 
 
-class SIRAgents(AgentGroup):
+class SIRSAgents(AgentGroup):
     def __init__(
             self, adj, dist, weights, region_size, dt=0.01
     ):
