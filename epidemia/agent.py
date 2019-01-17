@@ -19,13 +19,13 @@ class AgentGroup:
 
         # binarise dist and weights matrix
         self.adj_dist = self.dist * self.adj
-        self.adj_weights = self.dist * self.adj
+        self.adj_weights = self.weights * self.adj
 
         # region_size
-        self.region_size = np.array(region_size)
+        self.region_size = np.array(region_size).flatten()
 
         self.region_to_edge_weights = \
-            self.adj_weights / self.adj_weights.sum(axis=1)
+            self.adj_weights / self.adj_weights.sum(axis=1)[:, np.newaxis]
 
         self.edge_to_region_weights = np.zeros(self.dist.shape)
         self.edge_to_region_weights[self.adj_dist != 0] = \
@@ -35,4 +35,3 @@ class AgentGroup:
         self.clearance_rate = 0
         self.trans_rate = 0
         self.dt = dt
-
