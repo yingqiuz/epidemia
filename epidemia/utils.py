@@ -17,16 +17,23 @@ def transmission_process_region(
 ):
     """return newly infected population"""
     return population_s * (
-            1 - np.exp( - trans_rate * (population_i / region_size) * dt)
+        1 - np.exp(
+            - trans_rate * (population_i / region_size) * dt
+        )
     )
 
 
 def spread_process(
-        region, edge, edge_to_region_weights, region_to_edge_weights, v, dt
+        region, edge,
+        edge_to_region_weights,
+        region_to_edge_weights,
+        v, dt
 ):
     """conduct the spreading process"""
     # region to edge
-    region_to_edge = np.fill_diagonal(region * region_to_edge_weights * dt, 0)
+    region_to_edge = np.fill_diagonal(
+        region * region_to_edge_weights * dt, 0
+    )
     edge_to_region = edge * edge_to_region_weights * v * dt
 
     # update the population
