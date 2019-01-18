@@ -3,9 +3,6 @@
 a class to store the agents and do basic operations
 """
 import numpy as np
-from .utils import (
-    growth_process_region, clearance_process_region, transmission_process_region
-)
 
 
 class AgentGroup:
@@ -13,23 +10,22 @@ class AgentGroup:
             self, adj, dist, weights, region_size, dt=0.01
     ):
         self.adj = np.where(np.array(adj) != 0, 1, 0)
-        self.dist = np.array(dist)
-        self.weights = np.array(weights)
         self.n_regions = self.adj.shape[0]
 
+        # make sure the diagnal is zero
+        self.adj[np.eye(self.n_regions) == 1] = 0
+
+        self.dist = np.array(dist) * self.adj
+        self.weights = np.array(weights) * self.adj
+
         # binarise dist and weights matrix
-        self.adj_dist = self.dist * self.adj
-        self.adj_weights = self.weights * self.adj
+        self.dist_inv = np.zeros(self.dist.shape)
+        self.dist_inv[self.adj != 0] = 1 / self.dist[self.adj != 0]
+        self.spread_weights = self.weights / \
+            self.weights.sum(axis=1)[:, np.newaxis]
 
         # region_size
         self.region_size = np.array(region_size).flatten()
-
-        self.region_to_edge_weights = \
-            self.adj_weights / self.adj_weights.sum(axis=1)[:, np.newaxis]
-
-        self.edge_to_region_weights = np.zeros(self.dist.shape)
-        self.edge_to_region_weights[self.adj_dist != 0] = \
-            1 / self.adj_dist[self.adj_dist != 0]
 
         self.growth_rate = 0
         self.clearance_rate = 0

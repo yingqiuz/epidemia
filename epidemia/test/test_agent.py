@@ -3,9 +3,14 @@ import pytest
 from ..agent import AgentGroup
 
 N_REGIONS = 100
-ADJ = np.where(np.random.rand(N_REGIONS, N_REGIONS)>0.5, 1, 0)[0]
+ADJ = np.where(np.random.rand(N_REGIONS, N_REGIONS) > 0.5, 1, 0)
+ADJ[np.eye(N_REGIONS) == 1] = 0
 DIST = np.random.rand(N_REGIONS, N_REGIONS) * 100
+ADJ_DIST = DIST * ADJ
+DIST_INVERSE = np.zeros(DIST.shape)
+DIST_INVERSE[ADJ_DIST != 0] = 1 / ADJ_DIST[ADJ_DIST != 0]
 WEIGHTS = np.random.rand(N_REGIONS, N_REGIONS)
+ADJ_WEIGHTS = WEIGHTS * ADJ
 REGION_SIZE = region_size = np.random.rand(N_REGIONS)
 
 
@@ -16,14 +21,14 @@ def agents():
 
 def test_agents(agents):
     assert np.array_equal(agents.adj, ADJ)
-    assert np.allclose(agents.adj_dist, ADJ * DIST)
-    assert np.allclose(agents.adj_weights, ADJ * WEIGHTS)
+    assert np.allclose(agents.dist, ADJ * DIST)
+    assert np.allclose(agents.weights, ADJ * WEIGHTS)
     assert np.allclose(agents.region_size, REGION_SIZE)
     assert np.allclose(
-        agents.region_to_edge_weights,
-        ADJ * WEIGHTS / (ADJ * WEIGHTS).sum(axis=1)[:, np.newaxis]
+        agents.spread_weights,
+        ADJ_WEIGHTS / ADJ_WEIGHTS.sum(axis=1)[:, np.newaxis]
     )
     assert np.allclose(
-        agents.edge_to_region_weights[agents.adj != 0],
-        1 * ADJ / DIST[ADJ != 0]
+        agents.dist_inv[agents.adj != 0],
+        DIST_INVERSE[DIST_INVERSE != 0]
     )
