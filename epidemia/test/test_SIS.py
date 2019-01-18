@@ -110,8 +110,8 @@ def test_si(sis_agents):
     region_population = 100 - (1 - prob_stay) * 100 * 0.01 + \
         (100 * 0.01 * DIST_INVERSE).sum(axis=0)
     edge_population = 100 * (
-            ADJ_WEIGHTS / ADJ_WEIGHTS.sum(axis=1)[:, np.newaxis] *
-            (1 - prob_stay[:, np.newaxis])
+        ADJ_WEIGHTS / ADJ_WEIGHTS.sum(axis=1)[:, np.newaxis] *
+        (1 - prob_stay[:, np.newaxis])
     ) * 0.01 - 100 * 0.01 * DIST_INVERSE + 100 * ADJ
 
     assert np.allclose(
@@ -137,7 +137,7 @@ def test_si(sis_agents):
     assert np.allclose(
         sis_agents.region_population[0],
         region_s - region_s * (
-                1 - np.exp(-trans_rate * region_i * 0.01 / REGION_SIZE)
+            1 - np.exp(-trans_rate * region_i * 0.01 / REGION_SIZE)
         )
     )
 
@@ -148,6 +148,6 @@ def test_si(sis_agents):
     assert np.allclose(
         sis_agents.region_population[0],
         region_s + region_i * (
-                1 - np.exp(-recovery_rate * 0.01)
+            1 - np.exp(-recovery_rate * 0.01)
         )
     )

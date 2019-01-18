@@ -83,7 +83,7 @@ class SIRSAgents(AgentGroup):
 
     def spread_step(self):
         region_to_edge = self.region_population[:, :, np.newaxis] * \
-                         self.region_to_edge_weights * self.dt
+            self.region_to_edge_weights * self.dt
         region_to_edge[self.diag == 1] = 0
 
         # move from edge to region
@@ -91,7 +91,7 @@ class SIRSAgents(AgentGroup):
             self.edge_to_region_weights * self.dt
 
         self.region_population = self.region_population + (
-                edge_to_region.sum(axis=1) - region_to_edge.sum(axis=2)
+            edge_to_region.sum(axis=1) - region_to_edge.sum(axis=2)
         )
         self.edge_population = self.edge_population + \
             region_to_edge - edge_to_region

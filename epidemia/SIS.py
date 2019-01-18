@@ -83,7 +83,7 @@ class SISAgents(AgentGroup):
 
     def spread_step(self):
         region_to_edge = self.region_population[:, :, np.newaxis] * \
-                         self.region_to_edge_weights * self.dt
+            self.region_to_edge_weights * self.dt
         region_to_edge[self.diag == 1] = 0
 
         # move from edge to region

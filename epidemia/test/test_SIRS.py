@@ -142,7 +142,7 @@ def test_sir(si_agents):
         region_population + region_population * (
             1 - np.exp(-clearance_rate[1] * 0.01)
         ) + (region_population + growth_rate * REGION_SIZE * 0.01) * (
-                1 - np.exp(-clearance_rate[0] * 0.01)
+            1 - np.exp(-clearance_rate[0] * 0.01)
         )
     )
     region_s = np.copy(si_agents.region_population[0])
