@@ -4,7 +4,6 @@ import numpy as np
 from .agent import AgentGroup
 from .utils import (
     growth_process_region,
-    clearance_process_region,
     transmission_process_region
 )
 

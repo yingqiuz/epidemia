@@ -88,13 +88,13 @@ class SIRSAgents(AgentGroup):
 
         # move from edge to region
         edge_to_region = self.edge_population * \
-                         self.edge_to_region_weights * self.dt
+            self.edge_to_region_weights * self.dt
 
         self.region_population = self.region_population + (
                 edge_to_region.sum(axis=1) - region_to_edge.sum(axis=2)
         )
         self.edge_population = self.edge_population + \
-                               region_to_edge - edge_to_region
+            region_to_edge - edge_to_region
 
     def region_growth_step(self, growth_rate=0):
         self.region_population[0, :] += growth_process_region(

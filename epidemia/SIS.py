@@ -117,4 +117,3 @@ class SISAgents(AgentGroup):
 
         self.region_population[0, :] -= infected_population
         self.region_population[1, :] += infected_population
-

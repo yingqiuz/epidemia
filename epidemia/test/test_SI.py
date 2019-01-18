@@ -108,7 +108,7 @@ def test_si(si_agents):
     si_agents.add_population(region=100, edge=100)
     si_agents.spread_step()
     region_population = 100 - (1 - prob_stay) * 100 * 0.01 + \
-                        (100 * 0.01 * DIST_INVERSE).sum(axis=0)
+        (100 * 0.01 * DIST_INVERSE).sum(axis=0)
     edge_population = 100 * (
             ADJ_WEIGHTS / ADJ_WEIGHTS.sum(axis=1)[:, np.newaxis] *
             (1 - prob_stay[:, np.newaxis])

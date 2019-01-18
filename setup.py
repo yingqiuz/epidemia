@@ -7,7 +7,6 @@ you can install netflows with
 
 python setup.py install
 """
-
 import os
 import sys
 import setuptools

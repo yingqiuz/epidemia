@@ -10,9 +10,27 @@ from .utils import (
 
 
 class SIRAgents(AgentGroup):
+    """
+
+    """
     def __init__(
             self, adj, dist, weights, region_size, dt=0.01
     ):
+        """
+        Create an object of SIR agent group.
+        :param adj: 2D list or np.ndarray
+            adjacency matrix of the network where agents spread
+        :param dist: 2D list or np.ndarray
+            distance matrix of the network, determining the rates of
+            moving from edges to regions
+        :param weights: 2D list or np.ndarray
+            weight matrix of the network, controlling the probability
+            of moving into the corresponding edges
+        :param region_size: int, 1D list or np.ndarray
+            region size, affecting the growth and transmission
+        :param dt: float
+            time increment
+        """
         AgentGroup.__init__(
             self, adj, dist, weights, region_size, dt
         )
@@ -42,6 +60,12 @@ class SIRAgents(AgentGroup):
         )
 
     def add_population(self, region=0, edge=0):
+        """
+        add population to the group.
+        :param region:
+        :param edge:
+        :return:
+        """
         # add population in regions
         # has to be scalar value, or np.ndarray (self.n_regions, )
         # or np.ndarray(len(self.states), self.n_regions)

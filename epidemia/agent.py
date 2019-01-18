@@ -25,7 +25,8 @@ class AgentGroup:
             self.weights.sum(axis=1)[:, np.newaxis]
 
         # region_size
-        self.region_size = np.array(region_size).flatten()
+        self.region_size = np.array(region_size) * \
+            np.ones((self.n_regions, ))
 
         self.growth_rate = 0
         self.clearance_rate = 0

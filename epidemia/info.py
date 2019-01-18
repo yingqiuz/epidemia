@@ -9,7 +9,10 @@ __email__ = 'contact@yingqiuzheng.me'
 __status__ = 'Prototype'
 __url__ = 'http://github.com/yingqiuz/epidemia'
 __packagename__ = 'epidemia'
-__description__ = ('Epidemia is a Python Toolbox for Agent-Based Epidemic Modelling on Networks.')
+__description__ = (
+    'Epidemia is a Python Toolbox for '
+    'Agent-Based Epidemic Modelling on Networks.'
+)
 __longdesc__ = 'README.md'
 __longdesctype__ = 'text/markdown'
 

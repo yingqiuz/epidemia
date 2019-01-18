@@ -21,4 +21,3 @@ def transmission_process_region(
             - trans_rate * (population_i / region_size) * dt
         )
     )
-
