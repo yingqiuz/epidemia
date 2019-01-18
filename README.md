@@ -1,6 +1,8 @@
 # Epidemia
 Python based toolbox to agent-based or metapopulation epidemic modelling
 
+![alt_text](https://travis-ci.com/yingqiuz/epidemia.svg?branch=master)
+
 ## Usage
 Class `AgentBasedModel` simulates the interactions and mobility patterns of agents individually
 ```python
